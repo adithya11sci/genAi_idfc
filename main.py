@@ -64,40 +64,48 @@ def print_config(method: str, input_path: str, output_path: str, file_count: int
 
 def print_single_result(output: dict):
     """Print formatted result for single file extraction"""
-    fields = output.get('fields', {})
-    signature = fields.get('signature', {})
-    stamp = fields.get('stamp', {})
-    
-    print("\n┌" + "─" * 68 + "┐")
-    print("│" + " ✅ EXTRACTION RESULTS ".center(68) + "│")
-    print("├" + "─" * 68 + "┤")
-    print(f"│  📋 Document ID   : {str(output.get('doc_id', 'N/A')):<45} │")
-    print("├" + "─" * 68 + "┤")
-    print("│" + " 📊 EXTRACTED FIELDS ".center(68) + "│")
-    print("├" + "─" * 68 + "┤")
-    print(f"│  🏭 Dealer Name   : {str(fields.get('dealer_name') or 'Not Found'):<45} │")
-    print(f"│  🚜 Model Name    : {str(fields.get('model_name') or 'Not Found'):<45} │")
-    print(f"│  🐎 Horse Power   : {str(fields.get('horse_power') or 'Not Found'):<45} │")
-    print(f"│  💰 Asset Cost    : {str(fields.get('asset_cost') or 'Not Found'):<45} │")
-    print("├" + "─" * 68 + "┤")
-    print("│" + " 🔍 VERIFICATION ".center(68) + "│")
-    print("├" + "─" * 68 + "┤")
-    sig_status = "✅ Present" if signature.get('present') else "❌ Not Found"
-    stamp_status = "✅ Present" if stamp.get('present') else "❌ Not Found"
-    print(f"│  ✍️  Signature     : {sig_status:<45} │")
-    print(f"│  🏵️  Stamp         : {stamp_status:<45} │")
-    print("├" + "─" * 68 + "┤")
-    print("│" + " 📈 METADATA ".center(68) + "│")
-    print("├" + "─" * 68 + "┤")
-    confidence = output.get('confidence', 0)
-    conf_bar = "█" * int(confidence * 10) + "░" * (10 - int(confidence * 10))
-    print(f"│  🎯 Confidence    : [{conf_bar}] {confidence:.1%:<32} │")
-    print(f"│  ⚡ Method        : {str(output.get('extraction_method', 'unknown')):<45} │")
-    proc_time = output.get('processing_time_sec', 0)
-    print(f"│  ⏱️  Process Time  : {proc_time:.2f} seconds{'':<35} │")
-    cost = output.get('cost_estimate_usd', 0)
-    print(f"│  💵 Cost Estimate : ${cost:.4f}{'':<42} │")
-    print("└" + "─" * 68 + "┘")
+    try:
+        fields = output.get('fields', {})
+        signature = fields.get('signature', {})
+        stamp = fields.get('stamp', {})
+        
+        print("\n┌" + "─" * 68 + "┐")
+        print("│" + " ✅ EXTRACTION RESULTS ".center(68) + "│")
+        print("├" + "─" * 68 + "┤")
+        print(f"│  📋 Document ID   : {str(output.get('doc_id', 'N/A')):<45} │")
+        print("├" + "─" * 68 + "┤")
+        print("│" + " 📊 EXTRACTED FIELDS ".center(68) + "│")
+        print("├" + "─" * 68 + "┤")
+        print(f"│  🏭 Dealer Name   : {str(fields.get('dealer_name') or 'Not Found'):<45} │")
+        print(f"│  🚜 Model Name    : {str(fields.get('model_name') or 'Not Found'):<45} │")
+        print(f"│  🐎 Horse Power   : {str(fields.get('horse_power') or 'Not Found'):<45} │")
+        print(f"│  💰 Asset Cost    : {str(fields.get('asset_cost') or 'Not Found'):<45} │")
+        print("├" + "─" * 68 + "┤")
+        print("│" + " 🔍 VERIFICATION ".center(68) + "│")
+        print("├" + "─" * 68 + "┤")
+        sig_status = "✅ Present" if signature.get('present') else "❌ Not Found"
+        stamp_status = "✅ Present" if stamp.get('present') else "❌ Not Found"
+        print(f"│  ✍️  Signature     : {sig_status:<45} │")
+        print(f"│  🏵️  Stamp         : {stamp_status:<45} │")
+        print("├" + "─" * 68 + "┤")
+        print("│" + " 📈 METADATA ".center(68) + "│")
+        print("├" + "─" * 68 + "┤")
+        
+        confidence = float(output.get('confidence', 0))
+        conf_bar = "█" * int(confidence * 10) + "░" * (10 - int(confidence * 10))
+        print(f"│  🎯 Confidence    : [{conf_bar}] {confidence:<32.1%} │")
+        print(f"│  ⚡ Method        : {str(output.get('extraction_method', 'unknown')):<45} │")
+        proc_time = float(output.get('processing_time_sec', 0))
+        print(f"│  ⏱️  Process Time  : {proc_time:.2f} seconds{'':<35} │")
+        cost = float(output.get('cost_estimate_usd', 0))
+        print(f"│  💵 Cost Estimate : ${cost:.4f}{'':<42} │")
+        
+        print("└" + "─" * 68 + "┘")
+        
+    except Exception as e:
+        import traceback
+        print("\n❌ Error printing results:")
+        traceback.print_exc()
 
 
 def print_batch_summary(results: list, output_path: str):
