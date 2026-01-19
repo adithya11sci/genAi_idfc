@@ -10,6 +10,7 @@ from .config import API_KEYS
 from .key_manager import RoundRobinKeyManager
 from .gemini_extractor import GeminiExtractor
 from .ocr_extractor import EasyOCRExtractor
+from .local_llm_extractor import LocalLLMExtractor
 
 logger = logging.getLogger(__name__)
 
@@ -19,40 +20,34 @@ key_manager = RoundRobinKeyManager(API_KEYS)
 
 class HybridExtractor:
     """
-    Hybrid extractor that combines Gemini AI (primary) with EasyOCR (fallback).
+    Hybrid extractor that combines:
+    1. Gemini AI (Primary - Online)
+    2. EasyOCR + Local LLM (Secondary - Offline)
     
     Features:
         - Automatic failover: If Gemini fails, falls back to EasyOCR
+        - Offline Intelligence: Uses Local LLM to parse OCR text
         - Processing time tracking for each document
         - Cost estimation for API usage
         - Structured output format with confidence scores
     """
     
     def __init__(self):
-        """Initialize hybrid extractor with both engines"""
+        """Initialize hybrid extractor with all engines"""
         self.gemini = GeminiExtractor(key_manager)
         self.easyocr = EasyOCRExtractor()
+        self.local_llm = LocalLLMExtractor()
         
         # Status tracking
         self.gemini_available = self.gemini.initialized
         self.easyocr_available = self.easyocr.initialized
+        self.local_llm_available = self.local_llm.initialized
         
-        logger.info(f"Hybrid extractor initialized | Gemini: {self.gemini_available} | EasyOCR: {self.easyocr_available}")
+        logger.info(f"Hybrid Engine | Gemini: {self.gemini_available} | EasyOCR: {self.easyocr_available} | LocalLLM: {self.local_llm_available}")
     
     def extract(self, image_path: str) -> Dict[str, Any]:
         """
         Extract invoice data using hybrid approach.
-        
-        Strategy:
-            1. Try Gemini Vision first (better accuracy)
-            2. Fall back to EasyOCR if Gemini fails
-            3. Return structured result with metadata
-        
-        Args:
-            image_path: Path to the invoice image
-            
-        Returns:
-            Structured dictionary with extracted fields and metadata
         """
         doc_id = Path(image_path).stem
         start_time = time.time()
@@ -61,47 +56,66 @@ class HybridExtractor:
         result = None
         
         # ───────────────────────────────────────────────────────────────────
-        # PRIMARY: Try Gemini Vision API
+        # STRATEGY 1: Gemini Vision API (Online)
         # ───────────────────────────────────────────────────────────────────
+        # Skip Gemini if keys are empty or explicitly disabled (user instructions)
+        # For this specific task, we prioritize offline if requested, but keep logic generic
         if self.gemini_available:
             try:
-                result = self.gemini.extract(image_path)
-                if result and result.get('confidence', 0) > 0:
-                    extraction_method = 'gemini'
-                    logger.info(f"✅ Gemini extraction successful for {doc_id}")
+                # Check for explicit "no internet" mode request via config or implication
+                # For now we try if available, but users mentioned NO INTERNET, so keys might be invalid anyway
+                # If valid keys exist, we assume online. If not, we skip.
+                if any(k.startswith("AI") for k in API_KEYS):
+                    result = self.gemini.extract(image_path)
+                    if result and result.get('confidence', 0) > 0:
+                        extraction_method = 'gemini'
+                        logger.info(f"✅ Gemini extraction successful for {doc_id}")
             except Exception as e:
                 logger.warning(f"⚠️ Gemini failed for {doc_id}: {e}")
                 result = None
         
         # ───────────────────────────────────────────────────────────────────
-        # FALLBACK: Try EasyOCR if Gemini fails
+        # STRATEGY 2: EasyOCR + Local LLM (Offline)
         # ───────────────────────────────────────────────────────────────────
         if result is None and self.easyocr_available:
-            logger.info(f"🔄 Falling back to EasyOCR for {doc_id}")
+            logger.info(f"🔄 Running offline pipeline (EasyOCR + Local LLM) for {doc_id}")
             try:
-                result = self.easyocr.extract(image_path)
-                if result and result.get('confidence', 0) > 0:
+                # Step A: OCR Extraction (Text + Visual Features)
+                ocr_result = self.easyocr.extract(image_path)
+                
+                if ocr_result:
+                    result = ocr_result
                     extraction_method = 'easyocr'
-                    logger.info(f"✅ EasyOCR extraction successful for {doc_id}")
+                    
+                    # Step B: LLM Parsing (if available and text exists)
+                    if self.local_llm_available and ocr_result.get('raw_text'):
+                        logger.info(f"🧠 improving result with Local LLM for {doc_id}")
+                        llm_result = self.local_llm.extract(ocr_result['raw_text'])
+                        
+                        if llm_result:
+                            # Merge LLM fields (they are usually better than regex)
+                            if llm_result.get('dealer_name'): result['dealer_name'] = llm_result['dealer_name']
+                            if llm_result.get('model_name'): result['model_name'] = llm_result['model_name']
+                            if llm_result.get('horse_power'): result['horse_power'] = llm_result['horse_power']
+                            if llm_result.get('asset_cost'): result['asset_cost'] = llm_result['asset_cost']
+                            
+                            extraction_method = 'easyocr+local_llm'
+                            result['confidence'] = 0.85 # Higher confidence with LLM
+                            
+                    logger.info(f"✅ Offline extraction successful for {doc_id} via {extraction_method}")
             except Exception as e:
-                logger.error(f"❌ EasyOCR failed for {doc_id}: {e}")
+                logger.error(f"❌ Offline pipeline failed for {doc_id}: {e}")
                 result = None
         
         # ───────────────────────────────────────────────────────────────────
-        # HANDLE FAILURE: Return empty result structure
+        # HANDLE FAILURE
         # ───────────────────────────────────────────────────────────────────
         if result is None:
             result = {
-                'dealer_name': None,
-                'model_name': None,
-                'horse_power': None,
-                'asset_cost': None,
-                'signature_present': False,
-                'signature_bbox': None,
-                'stamp_present': False,
-                'stamp_bbox': None,
-                'confidence': 0.0,
-                'extraction_method': 'failed'
+                'dealer_name': None, 'model_name': None, 'horse_power': None, 'asset_cost': None,
+                'signature_present': False, 'signature_bbox': None,
+                'stamp_present': False, 'stamp_bbox': None,
+                'confidence': 0.0, 'extraction_method': 'failed'
             }
             logger.error(f"❌ All extraction methods failed for {doc_id}")
         
@@ -109,7 +123,7 @@ class HybridExtractor:
         processing_time = time.time() - start_time
         
         # ───────────────────────────────────────────────────────────────────
-        # FORMAT OUTPUT: Structured JSON response
+        # FORMAT OUTPUT
         # ───────────────────────────────────────────────────────────────────
         return {
             "doc_id": doc_id,

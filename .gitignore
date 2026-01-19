@@ -1,0 +1,26 @@
+# Large models
+models/
+*.gguf
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Results and logs
+*.json
+*.log
+result.json
+batch_results.json
+test_*.json
+
+# Test directories
+test_samples/
+test_invoices/
+
+# Environment variables
+.env
+.venv
+venv/
+ENV/

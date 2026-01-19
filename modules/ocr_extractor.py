@@ -39,8 +39,31 @@ class EasyOCRExtractor:
             # OCR
             results = self.reader.readtext(image)
             
-            # Combine all text
-            full_text = ' '.join([r[1] for r in results]).lower()
+            # Sort results by vertical position (y), then horizontal (x)
+            # result structure: ([[x1, y1], [x2, y2], ...], text, conf)
+            # We take the top-left y coordinate for vertical sorting
+            results.sort(key=lambda r: (r[0][0][1], r[0][0][0]))
+            
+            # Simple line grouping
+            lines = []
+            current_line = []
+            last_y = -1
+            
+            for bbox, text, conf in results:
+                y = bbox[0][1]
+                if last_y != -1 and abs(y - last_y) > 20: # New line threshold
+                     lines.append(" ".join(current_line))
+                     current_line = []
+                current_line.append(text)
+                last_y = y
+            if current_line:
+                lines.append(" ".join(current_line))
+            
+            # Formatted text (preserving newlines)
+            formatted_text = "\n".join(lines)
+            
+            # Flat text for regex (legacy support)
+            full_text = formatted_text.lower().replace('\n', ' ')
             
             # Extract dealer name
             dealer_name = None
@@ -148,7 +171,8 @@ class EasyOCRExtractor:
                 'stamp_present': stamp_present,
                 'stamp_bbox': stamp_bbox,
                 'confidence': 0.6,
-                'extraction_method': 'easyocr'
+                'extraction_method': 'easyocr',
+                'raw_text': formatted_text  # Return layout-preserved text for LLM
             }
             
         except Exception as e:

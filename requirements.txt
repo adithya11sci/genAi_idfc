@@ -6,3 +6,5 @@ tqdm
 numpy
 pdf2image
 PyMuPDF
+llama-cpp-python
+huggingface_hub[hf_xet]

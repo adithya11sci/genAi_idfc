@@ -43,23 +43,23 @@ except ImportError:
 
 def print_header():
     """Print application header"""
-    print("\n" + "═" * 70)
-    print("║" + " " * 68 + "║")
-    print("║" + "🚜  IDFC GenAI - Hybrid Document AI Extractor  📄".center(68) + "║")
-    print("║" + " " * 68 + "║")
-    print("═" * 70)
+    print("\n" + "=" * 70)
+    print("|" + " " * 68 + "|")
+    print("|" + "   IDFC GenAI - Hybrid Document AI Extractor   ".center(68) + "|")
+    print("|" + " " * 68 + "|")
+    print("=" * 70)
 
 
 def print_config(method: str, input_path: str, output_path: str, file_count: int):
     """Print configuration summary"""
-    print("\n┌" + "─" * 68 + "┐")
-    print("│" + " CONFIGURATION ".center(68) + "│")
-    print("├" + "─" * 68 + "┤")
-    print(f"│  📌 Method      : {method.upper():<47} │")
-    print(f"│  📂 Input       : {input_path:<47} │")
-    print(f"│  💾 Output      : {output_path:<47} │")
-    print(f"│  📄 Files Found : {file_count:<47} │")
-    print("└" + "─" * 68 + "┘")
+    print("\n+" + "-" * 68 + "+")
+    print("|" + " CONFIGURATION ".center(68) + "|")
+    print("+" + "-" * 68 + "+")
+    print(f"|  Method         : {method.upper():<47} |")
+    print(f"|  Input          : {input_path:<47} |")
+    print(f"|  Output         : {output_path:<47} |")
+    print(f"|  Files Found    : {file_count:<47} |")
+    print("+" + "-" * 68 + "+")
 
 
 def print_single_result(output: dict):
@@ -69,42 +69,42 @@ def print_single_result(output: dict):
         signature = fields.get('signature', {})
         stamp = fields.get('stamp', {})
         
-        print("\n┌" + "─" * 68 + "┐")
-        print("│" + " ✅ EXTRACTION RESULTS ".center(68) + "│")
-        print("├" + "─" * 68 + "┤")
-        print(f"│  📋 Document ID   : {str(output.get('doc_id', 'N/A')):<45} │")
-        print("├" + "─" * 68 + "┤")
-        print("│" + " 📊 EXTRACTED FIELDS ".center(68) + "│")
-        print("├" + "─" * 68 + "┤")
-        print(f"│  🏭 Dealer Name   : {str(fields.get('dealer_name') or 'Not Found'):<45} │")
-        print(f"│  🚜 Model Name    : {str(fields.get('model_name') or 'Not Found'):<45} │")
-        print(f"│  🐎 Horse Power   : {str(fields.get('horse_power') or 'Not Found'):<45} │")
-        print(f"│  💰 Asset Cost    : {str(fields.get('asset_cost') or 'Not Found'):<45} │")
-        print("├" + "─" * 68 + "┤")
-        print("│" + " 🔍 VERIFICATION ".center(68) + "│")
-        print("├" + "─" * 68 + "┤")
-        sig_status = "✅ Present" if signature.get('present') else "❌ Not Found"
-        stamp_status = "✅ Present" if stamp.get('present') else "❌ Not Found"
-        print(f"│  ✍️  Signature     : {sig_status:<45} │")
-        print(f"│  🏵️  Stamp         : {stamp_status:<45} │")
-        print("├" + "─" * 68 + "┤")
-        print("│" + " 📈 METADATA ".center(68) + "│")
-        print("├" + "─" * 68 + "┤")
+        print("\n+" + "-" * 68 + "+")
+        print("|" + " EXTRACTION RESULTS ".center(68) + "|")
+        print("+" + "-" * 68 + "+")
+        print(f"|  Document ID    : {str(output.get('doc_id', 'N/A')):<45} |")
+        print("+" + "-" * 68 + "+")
+        print("|" + " EXTRACTED FIELDS ".center(68) + "|")
+        print("+" + "-" * 68 + "+")
+        print(f"|  Dealer Name    : {str(fields.get('dealer_name') or 'Not Found'):<45} |")
+        print(f"|  Model Name     : {str(fields.get('model_name') or 'Not Found'):<45} |")
+        print(f"|  Horse Power    : {str(fields.get('horse_power') or 'Not Found'):<45} |")
+        print(f"|  Asset Cost     : {str(fields.get('asset_cost') or 'Not Found'):<45} |")
+        print("+" + "-" * 68 + "+")
+        print("|" + " VERIFICATION ".center(68) + "|")
+        print("+" + "-" * 68 + "+")
+        sig_status = "YES" if signature.get('present') else "NO"
+        stamp_status = "YES" if stamp.get('present') else "NO"
+        print(f"|  Signature      : {sig_status:<45} |")
+        print(f"|  Stamp          : {stamp_status:<45} |")
+        print("+" + "-" * 68 + "+")
+        print("|" + " METADATA ".center(68) + "|")
+        print("+" + "-" * 68 + "+")
         
         confidence = float(output.get('confidence', 0))
-        conf_bar = "█" * int(confidence * 10) + "░" * (10 - int(confidence * 10))
-        print(f"│  🎯 Confidence    : [{conf_bar}] {confidence:<32.1%} │")
-        print(f"│  ⚡ Method        : {str(output.get('extraction_method', 'unknown')):<45} │")
+        conf_bar = "#" * int(confidence * 10) + "." * (10 - int(confidence * 10))
+        print(f"|  Confidence     : [{conf_bar}] {confidence:<32.1%} |")
+        print(f"|  Method         : {str(output.get('extraction_method', 'unknown')):<45} |")
         proc_time = float(output.get('processing_time_sec', 0))
-        print(f"│  ⏱️  Process Time  : {proc_time:.2f} seconds{'':<35} │")
+        print(f"|  Process Time   : {proc_time:.2f} seconds{'':<35} |")
         cost = float(output.get('cost_estimate_usd', 0))
-        print(f"│  💵 Cost Estimate : ${cost:.4f}{'':<42} │")
+        print(f"|  Cost Estimate  : ${cost:.4f}{'':<42} |")
         
-        print("└" + "─" * 68 + "┘")
+        print("+" + "-" * 68 + "+")
         
     except Exception as e:
         import traceback
-        print("\n❌ Error printing results:")
+        print("\nError printing results:")
         traceback.print_exc()
 
 
@@ -117,44 +117,46 @@ def print_batch_summary(results: list, output_path: str):
     total_time = sum(r.get('processing_time_sec', 0) for r in results)
     total_cost = sum(r.get('cost_estimate_usd', 0) for r in results)
     
-    print("\n╔" + "═" * 68 + "╗")
-    print("║" + " 📊 BATCH PROCESSING SUMMARY ".center(68) + "║")
-    print("╠" + "═" * 68 + "╣")
-    print(f"║  📄 Total Documents    : {total:<41} ║")
-    print(f"║  ✅ Successful         : {successful:<41} ║")
-    print(f"║  ❌ Failed             : {failed:<41} ║")
-    print("╠" + "═" * 68 + "╣")
-    print("║" + " 📈 STATISTICS ".center(68) + "║")
-    print("╠" + "═" * 68 + "╣")
-    conf_bar = "█" * int(avg_confidence * 10) + "░" * (10 - int(avg_confidence * 10))
-    print(f"║  🎯 Avg Confidence     : [{conf_bar}] {avg_confidence:.1%:<28} ║")
-    print(f"║  ⏱️  Total Time         : {total_time:.2f} seconds{'':<31} ║")
-    print(f"║  ⚡ Avg Time/Doc       : {(total_time/total if total else 0):.2f} seconds{'':<31} ║")
-    print(f"║  💵 Total Cost         : ${total_cost:.4f}{'':<38} ║")
-    print("╠" + "═" * 68 + "╣")
-    print("║" + " 📋 DOCUMENT RESULTS ".center(68) + "║")
-    print("╠" + "═" * 68 + "╣")
+    print("\n" + "-" * 70)
+    print(" BATCH PROCESSING SUMMARY ".center(70))
+    print("-" * 70)
+    print(f" Total Documents   : {total}")
+    print(f" Successful        : {successful}")
+    print(f" Failed            : {failed}")
+    print("-" * 70)
+    print(" STATISTICS ".center(70))
+    print("-" * 70)
+    conf_bar = "#" * int(avg_confidence * 10) + "." * (10 - int(avg_confidence * 10))
+    print(f"|  Avg Confidence    : [{conf_bar}] {avg_confidence:.1%} {'':<22} |")
+    print(f"|  Total Time        : {total_time:.2f} seconds{'':<31} |")
+    print(f"|  Avg Time/Doc      : {(total_time/total if total else 0):.2f} seconds{'':<31} |")
+    print(f"|  Total Cost        : ${total_cost:.4f}{'':<38} |")
+    print("+" + "-" * 68 + "+")
+    print("|" + " DOCUMENT RESULTS ".center(68) + "|")
+    print("+" + "-" * 68 + "+")
     
     # Show each document result briefly
     for i, result in enumerate(results[:10]):  # Show first 10
         doc_id = result.get('doc_id', 'unknown')[:20]
         conf = result.get('confidence', 0)
-        status = "✅" if conf > 0.5 else "⚠️" if conf > 0 else "❌"
-        dealer = (result.get('fields', {}).get('dealer_name') or 'N/A')[:20]
-        print(f"║  {status} {doc_id:<20} │ Conf: {conf:.0%} │ Dealer: {dealer:<15} ║")
+        status = "[OK]" if conf > 0.5 else "[WARN]" if conf > 0 else "[FAIL]"
+        dealer = (result.get('fields', {}).get('dealer_name') or 'N/A')
+        # Sanitize dealer name for console printing
+        dealer = ''.join(c if ord(c) < 128 else '?' for c in dealer)[:15]
+        print(f"|  {status} {doc_id:<20} | Conf: {conf:.0%} | Dealer: {dealer:<15} |")
     
     if total > 10:
-        print(f"║  ... and {total - 10} more documents{'':<41} ║")
+        print(f"|  ... and {total - 10} more documents{'':<41} |")
     
-    print("╚" + "═" * 68 + "╝")
+    print("+" + "-" * 68 + "+")
 
 
 def print_footer(output_path: str):
     """Print footer with output location"""
-    print("\n┌" + "─" * 68 + "┐")
-    print(f"│  💾 Results saved to: {output_path:<43} │")
-    print(f"│  🕐 Completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S'):<46} │")
-    print("└" + "─" * 68 + "┘\n")
+    print("\n+" + "-" * 68 + "+")
+    print(f"|  Results saved to: {output_path:<43} |")
+    print(f"|  Completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S'):<46} |")
+    print("+" + "-" * 68 + "+\n")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -171,16 +173,9 @@ ALL_EXTENSIONS = IMAGE_EXTENSIONS + PDF_EXTENSIONS
 def convert_pdf_to_images(pdf_path: str, output_dir: str = None) -> list:
     """
     Convert PDF file to images (one per page).
-    
-    Args:
-        pdf_path: Path to the PDF file
-        output_dir: Directory to save converted images (uses temp dir if None)
-        
-    Returns:
-        List of paths to converted image files
     """
     if not PDF_SUPPORT:
-        print(f"❌ PDF support not available. Please install pdf2image or PyMuPDF.")
+        print(f"PDF support not available. Please install pdf2image or PyMuPDF.")
         return []
     
     pdf_name = Path(pdf_path).stem
@@ -198,7 +193,7 @@ def convert_pdf_to_images(pdf_path: str, output_dir: str = None) -> list:
         import fitz
         doc = fitz.open(pdf_path)
         
-        print(f"  📄 Converting PDF ({len(doc)} pages)...")
+        print(f"  Converting PDF ({len(doc)} pages)...")
         
         for page_num in range(len(doc)):
             page = doc.load_page(page_num)
@@ -211,14 +206,14 @@ def convert_pdf_to_images(pdf_path: str, output_dir: str = None) -> list:
             image_paths.append(output_path)
             
         doc.close()
-        print(f"  ✅ Converted {len(image_paths)} pages from PDF")
+        print(f"  Converted {len(image_paths)} pages from PDF")
         
     except ImportError:
         # Fallback to pdf2image
         try:
             from pdf2image import convert_from_path
             
-            print(f"  📄 Converting PDF to images...")
+            print(f"  Converting PDF to images...")
             images = convert_from_path(pdf_path, dpi=300)
             
             for i, image in enumerate(images):
@@ -226,14 +221,14 @@ def convert_pdf_to_images(pdf_path: str, output_dir: str = None) -> list:
                 image.save(output_path, 'PNG')
                 image_paths.append(output_path)
                 
-            print(f"  ✅ Converted {len(image_paths)} pages from PDF")
+            print(f"  Converted {len(image_paths)} pages from PDF")
             
         except Exception as e:
-            print(f"❌ Failed to convert PDF: {e}")
+            print(f"Failed to convert PDF: {e}")
             return []
     
     except Exception as e:
-        print(f"❌ Failed to convert PDF: {e}")
+        print(f"Failed to convert PDF: {e}")
         return []
     
     return image_paths
@@ -242,12 +237,6 @@ def convert_pdf_to_images(pdf_path: str, output_dir: str = None) -> list:
 def get_image_files(input_path: Path) -> list:
     """
     Get list of image files from input path.
-    Supports single file or directory with multiple files.
-    Handles PDF conversion automatically.
-    
-    Supported formats:
-        - Images: PNG, JPG, JPEG, BMP, TIFF, WEBP, GIF
-        - Documents: PDF (each page converted to image)
     """
     
     if input_path.is_file():
@@ -257,9 +246,9 @@ def get_image_files(input_path: Path) -> list:
         # Handle PDF files
         if suffix == '.pdf':
             if not PDF_SUPPORT:
-                print(f"❌ PDF support not available. Install: pip install PyMuPDF pdf2image")
+                print(f"PDF support not available. Install: pip install PyMuPDF pdf2image")
                 return []
-            print(f"  📄 Detected PDF file: {input_path.name}")
+            print(f"  Detected PDF file: {input_path.name}")
             return convert_pdf_to_images(str(input_path))
         
         # Handle image files
@@ -268,7 +257,7 @@ def get_image_files(input_path: Path) -> list:
         
         # Try unknown format anyway
         else:
-            print(f"⚠️  Warning: {input_path.suffix} format - attempting to process anyway...")
+            print(f"Warning: {input_path.suffix} format - attempting to process anyway...")
             return [str(input_path)]
     
     elif input_path.is_dir():
@@ -286,7 +275,7 @@ def get_image_files(input_path: Path) -> list:
         
         # Convert PDFs to images
         if pdf_paths:
-            print(f"  📁 Found {len(pdf_paths)} PDF file(s) - converting...")
+            print(f"  Found {len(pdf_paths)} PDF file(s) - converting...")
             for pdf_path in pdf_paths:
                 converted = convert_pdf_to_images(pdf_path)
                 image_paths.extend(converted)
@@ -361,9 +350,9 @@ def process_batch_files(extractor, image_paths: list, output_path: str, method: 
     results = []
     total = len(image_paths)
     
-    print("\n┌" + "─" * 68 + "┐")
-    print("│" + " 🔄 BATCH PROCESSING ".center(68) + "│")
-    print("└" + "─" * 68 + "┘\n")
+    print("\n+" + "-" * 68 + "+")
+    print("|" + " BATCH PROCESSING ".center(68) + "|")
+    print("+" + "-" * 68 + "+\n")
     
     for i, path in enumerate(image_paths, 1):
         doc_name = Path(path).name[:30]
@@ -374,10 +363,10 @@ def process_batch_files(extractor, image_paths: list, output_path: str, method: 
             result = process_single_file(extractor, path, method)
             results.append(result)
             conf = result.get('confidence', 0)
-            status = "✅" if conf > 0.5 else "⚠️" if conf > 0 else "❌"
+            status = "[OK]" if conf > 0.5 else "[WARN]" if conf > 0 else "[FAIL]"
             print(f"{status} Done (Confidence: {conf:.0%})")
         except Exception as e:
-            print(f"❌ Failed: {str(e)[:30]}")
+            print(f"[FAIL] Failed: {str(e)[:30]}")
             results.append({
                 "doc_id": Path(path).stem,
                 "source_file": str(path),
@@ -448,11 +437,11 @@ Examples:
     
     # Determine mode
     is_single_file = len(image_paths) == 1
-    mode = "📄 SINGLE FILE" if is_single_file else "📁 BATCH FOLDER"
+    mode = "SINGLE FILE" if is_single_file else "BATCH FOLDER"
     
     # Print configuration
     print_config(args.method, args.input, args.output, len(image_paths))
-    print(f"\n  🔧 Mode: {mode}")
+    print(f"\n  > Mode: {mode}")
     
     # Create extractor
     extractor = create_extractor(args.method)
@@ -464,7 +453,7 @@ Examples:
         # ═══════════════════════════════════════════════════════════════════
         #                        SINGLE FILE MODE
         # ═══════════════════════════════════════════════════════════════════
-        print("\n  ⏳ Processing single document...")
+        print("\n  > Processing single document...")
         output = process_single_file(extractor, image_paths[0], args.method)
         
         # Save result

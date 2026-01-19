@@ -2,9 +2,11 @@
 # API KEY MANAGEMENT
 # ============================================================================
 
-# PRIMARY API KEY (User's working key - USE ONLY THIS)
-PRIMARY_API_KEY = "AIzaSyDng22lO5X0KEmsFsPimIYUGvWCKej3wH4"
-GEMINI_MODEL = "gemini-2.5-flash"  # Working model with vision
+# User specified NO INTERNET / NO EXTERNAL APIs.
+# We are clearing keys to force the Offline Hybrid Pipeline (EasyOCR + Local LLM).
 
-# Use only user's key
-API_KEYS = [PRIMARY_API_KEY]
+# PRIMARY_API_KEY = "AIzaSyDng22lO5X0KEmsFsPimIYUGvWCKej3wH4" 
+GEMINI_MODEL = "gemini-1.5-flash"
+
+# Empty keys list forces offline mode immediately
+API_KEYS = []

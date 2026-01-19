@@ -36,6 +36,7 @@ We engineered a complete solution that solved every problem above:
 | ✅ Achievement | 📈 Result |
 | :--- | :--- |
 | **Automated Extraction** | Reduced processing time from 15 min → **< 15 seconds** |
+| **Offline GenAI** | **Self-hosted LLM (Llama 3.2)** allows advanced parsing without internet |
 | **AI-Powered Accuracy** | Achieved **95%+ accuracy** even on messy invoices |
 | **Universal Format Support** | Works on **any dealer format**—no templates needed |
 | **Tri-Lingual Processing** | Handles **English, Hindi, Gujarati** seamlessly |
@@ -54,11 +55,11 @@ We engineered a complete solution that solved every problem above:
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
 |   +---------------------+   +---------------------+   +---------------------+     |
-|   |  SPEED              |   |  ACCURACY           |   |  COST-EFFECTIVE     |     |
+|   |  SPEED              |   |  ACCURACY           |   |  PRIVACY FIRST      |     |
 |   |  -----------------  |   |  -----------------  |   |  -----------------  |     |
-|   |  * 15 sec/document  |   |  * 95%+ extraction  |   |  * ~$0.0003/doc     |     |
-|   |  * Batch processing |   |  * Context-aware    |   |  * No training cost |     |
-|   |  * Async capable    |   |  * Self-validating  |   |  * Minimal infra    |     |
+|   |  * 15 sec/document  |   |  * 95%+ extraction  |   |  * 100% Offline     |     |
+|   |  * Batch processing |   |  * Context-aware    |   |  * No Data Leakage  |     |
+|   |  * Async capable    |   |  * Self-validating  |   |  * Zero API Cost    |     |
 |   +---------------------+   +---------------------+   +---------------------+     |
 |                                                                                   |
 |   +---------------------+   +---------------------+   +---------------------+     |
@@ -76,7 +77,7 @@ We engineered a complete solution that solved every problem above:
 
 ## 💡 **Our Solution: The "Hybrid Brain" Architecture** 🧠
 
-We engineered an intelligent system that **thinks before it reads**. By fusing LLM reasoning capabilities with specialized OCR processing, we achieved best-in-class extraction accuracy.
+We engineered an intelligent system that **thinks before it reads**. By fusing **Local LLM reasoning** with specialized OCR processing, we achieved best-in-class extraction accuracy entirely offline.
 
 ---
 
@@ -96,27 +97,24 @@ We engineered an intelligent system that **thinks before it reads**. By fusing L
 |   +-----------------------------------------------------------------------+       |
 |   |                      HYBRID ROUTING ENGINE                            |       |
 |   |  -------------------------------------------------------------------- |       |
-|   |  * Built intelligent failover with automatic health monitoring        |       |
+|   |  * Automatic switching between Online (Gemini) and Offline (Local LLM)|       |
 |   |  * Configured primary/fallback switching with zero downtime           |       |
 |   +-------------------------------+---------------------------------------+       |
 |                                   |                                               |
 |              +--------------------+--------------------+                          |
 |              v                                        v                           |
 |   +-----------------------+             +-----------------------+                 |
-|   |  PRIMARY PATH         |             |  FALLBACK PATH        |                 |
+|   |  ONLINE PATH          |             |  OFFLINE PATH         |                 |
 |   |  -------------------  |             |  -------------------  |                 |
-|   |  Gemini Vision Pro    |             |  EasyOCR Engine       |                 |
+|   |  Gemini Vision Pro    |             |  EasyOCR + Local LLM  |                 |
 |   |                       |             |                       |                 |
-|   |  [+] Integrated       |             |  [+] Deployed local   |                 |
-|   |      context-aware    |             |      OCR processing   |                 |
-|   |      visual parsing   |             |                       |                 |
-|   |                       |             |  [+] Implemented      |                 |
-|   |  [+] Configured       |             |      regex patterns   |                 |
-|   |      semantic field   |             |      & fuzzy matching |                 |
-|   |      recognition      |             |                       |                 |
-|   |                       |             |  [+] Added tri-lingual|                 |
-|   |  [+] Enabled multi-   |             |      text extraction  |                 |
-|   |      language support |             |      (EN/HI/GU)       |                 |
+|   |  [+] Best accuracy    |             |  [+] 100% Privacy     |                 |
+|   |      when internet    |             |      & Security       |                 |
+|   |      is available     |             |                       |                 |
+|   |                       |             |  [+] Llama 3.2 3B     |                 |
+|   |  [+] Multi-modal      |             |      Reasoning        |                 |
+|   |      vision parsing   |             |                       |                 |
+|   |                       |             |  [+] Regex Backup     |                 |
 |   +-----------+-----------+             +-----------+-----------+                 |
 |               |                                     |                             |
 |               +------------------+------------------+                             |
@@ -144,9 +142,9 @@ We engineered an intelligent system that **thinks before it reads**. By fusing L
 
 | Component | Implementation Details |
 | :--- | :--- |
-| **🧠 Vision AI** | Integrated Gemini Pro for context-aware invoice parsing—recognizes "Mahindra 575" as a model and "₹8,50,000" as price regardless of layout variations |
-| **🦅 Fallback OCR** | Deployed EasyOCR with custom regex patterns and fuzzy matching for network failures and rate-limit scenarios |
-| **⚖️ Validator** | Built cross-field verification to flag arithmetic inconsistencies automatically |
+| **🧠 Local GenAI** | Integrated **Llama 3.2 3B** (quantized) to run locally on CPU/GPU for intelligent text parsing without internet. |
+| **⚡ Vision OCR** | Deployed EasyOCR with layout-preserving extraction to feed the LLM accurate context. |
+| **⚖️ Validator** | Built cross-field verification to flag arithmetic inconsistencies automatically. |
 
 ---
 
@@ -154,10 +152,10 @@ We engineered an intelligent system that **thinks before it reads**. By fusing L
 
 | Feature | Why it matters |
 | :--- | :--- |
+| **🔒 Fully Offline** | Works in air-gapped environments with **Zero Internet**. |
 | **🗣️ Tri-Lingual** | Handles **English, Hindi, and Gujarati** seamlessly. |
 | **⚡ Blazing Fast** | Average processing time of **<15 seconds** per document. |
 | **🛡️ Bulletproof** | **100% Uptime** thanks to the Hybrid Fallback mechanism. |
-| **💰 Ultra Low Cost** | Uses smart resizing to keep API costs to **~$0.0003** per doc. |
 | **✍️ Signature ID** | Detects if a document is officially signed and stamped. |
 
 ---
@@ -234,102 +232,25 @@ API_KEYS = [
 
 ---
 
-## 📤 **Usage: Single File vs Batch Processing**
+## 🐳 **Zero-Internet Extraction (Docker)**
 
-Our system supports **flexible input options**—process one invoice or hundreds at once!
+This entire solution is containerized. It includes the Python environment, dependencies, and the **Local LLM Model** baked inside.
 
-```
-+-----------------------------------------------------------------------------------+
-|                              FILE UPLOAD OPTIONS                                  |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|   +-------------------------------+     +-------------------------------+         |
-|   |  SINGLE FILE MODE             |     |  BATCH FOLDER MODE            |         |
-|   |  ---------------------------  |     |  ---------------------------  |         |
-|   |                               |     |                               |         |
-|   |  Process ONE invoice at       |     |  Process MULTIPLE invoices    |         |
-|   |  a time for quick results     |     |  in one go for bulk processing|         |
-|   |                               |     |                               |         |
-|   |  [+] Instant feedback         |     |  [+] Automated batch loop     |         |
-|   |  [+] Detailed single output   |     |  [+] Combined JSON output     |         |
-|   |  [+] Best for testing         |     |  [+] Progress tracking        |         |
-|   |                               |     |  [+] Best for production      |         |
-|   +-------------------------------+     +-------------------------------+         |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-### **Option 1: Process a Single Invoice** 📄
-
-Upload and process **one file** for quick extraction:
+### **1. Build the Docker Image**
+Run this command once to package everything (Internet required for this step ONLY):
 
 ```bash
-python main.py --input path/to/invoice.png --output result.json
+docker build -t idfc-extractor .
 ```
 
-**Example:**
-```bash
-python main.py --input train/sample_invoice.png --output single_result.json
-```
-
-**Output:** A JSON file with extracted fields for that single document.
-
----
-
-### **Option 2: Process Multiple Invoices (Batch Mode)** 📁
-
-Upload an **entire folder** of invoices for bulk processing:
+### **2. Run Offline**
+Once built, you can run this container anywhere **without internet**.
 
 ```bash
-python main.py --input path/to/folder/ --output batch_results.json
+# Process a local folder (e.g., 'test_invoices')
+docker run --rm -v $(pwd)/test_invoices:/data idfc-extractor --input /data --output /data/results.json
 ```
-
-**Example:**
-```bash
-python main.py --input train/ --output all_results.json
-```
-
-**Output:** A combined JSON file with results for ALL documents in the folder.
-
----
-
-### **Option 3: Choose Extraction Method** 🔧
-
-Select which AI engine to use:
-
-| Method | Command | Use Case |
-| :--- | :--- | :--- |
-| **Hybrid** (Default) | `--method hybrid` | Best accuracy + reliability |
-| **Gemini Only** | `--method gemini` | Maximum AI power |
-| **OCR Only** | `--method ocr` | Offline/no API needed |
-
-**Examples:**
-```bash
-# Use hybrid mode (recommended)
-python main.py --input train/ --output results.json --method hybrid
-
-# Use only Gemini AI
-python main.py --input invoice.png --output result.json --method gemini
-
-# Use only local OCR (works offline)
-python main.py --input invoice.png --output result.json --method ocr
-```
-
----
-
-### **Supported File Formats** 📷
-
-| Format | Extension | Status | Notes |
-| :--- | :--- | :--- | :--- |
-| **PNG Images** | `.png` | ✅ Supported | Best quality |
-| **JPEG Images** | `.jpg`, `.jpeg` | ✅ Supported | Most common |
-| **BMP Images** | `.bmp` | ✅ Supported | Uncompressed |
-| **TIFF Images** | `.tiff`, `.tif` | ✅ Supported | High quality scans |
-| **WebP Images** | `.webp` | ✅ Supported | Modern format |
-| **GIF Images** | `.gif` | ✅ Supported | Static images |
-| **PDF Documents** | `.pdf` | ✅ Supported | Auto-converts each page to image |
-
-> **📌 PDF Support:** PDFs are automatically converted to images (one per page) using PyMuPDF or pdf2image. Multi-page PDFs will process each page separately.
+*Note: This maps your local folder to `/data` inside the container.*
 
 ---
 
@@ -338,28 +259,16 @@ python main.py --input invoice.png --output result.json --method ocr
 Clean, modular architecture for easy maintenance and extension:
 
 ```
-+-----------------------------------------------------------------------------------+
-|                              PROJECT LAYOUT                                       |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|   genAi_idfc/                                                                     |
-|   |                                                                               |
-|   +-- main.py                --> CLI entry point (handles args & output)          |
-|   |                                                                               |
-|   +-- modules/               --> Core extraction logic                            |
-|   |   +-- hybrid_engine.py   --> Orchestrates primary + fallback extraction       |
-|   |   +-- gemini_extractor.py--> Google Gemini Vision API integration             |
-|   |   +-- ocr_extractor.py   --> EasyOCR-based local extraction                   |
-|   |   +-- key_manager.py     --> API key rotation & rate limit handling           |
-|   |   +-- config.py          --> Configuration & API keys                         |
-|   |                                                                               |
-|   +-- train/                 --> Sample invoices for testing                      |
-|   |                                                                               |
-|   +-- requirements.txt       --> Python dependencies                              |
-|   |                                                                               |
-|   +-- README.md              --> This documentation                               |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
+genAi_idfc/
+|
++-- Dockerfile             --> Self-contained build script
++-- models/                --> Contains pre-downloaded LLM (model.gguf)
++-- main.py                --> CLI entry point
++-- setup_model.py         --> Model downloader (runs during build)
++-- modules/               --> Core logic
+    +-- local_llm_extractor.py --> Offline AI reasoning
+    +-- ocr_extractor.py       --> Visual extraction
+    +-- config.py              --> Configuration
 ```
 
 ---
